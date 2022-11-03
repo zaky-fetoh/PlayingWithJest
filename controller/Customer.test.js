@@ -5,7 +5,7 @@ describe("testing addCustomer middleware", () => {
     });
 
     test("addCustomer function Normal behaviours", () => {
-        
+
         createMock = jest.fn(async () => ({ _id: "helloMock" }));
         custModelMock = jest.doMock("../model/customer", () => ({
             create: createMock,
@@ -54,63 +54,63 @@ describe("testing addCustomer middleware", () => {
     })
 })
 
-describe("testing update meddleware functionalBehaviour",()=>{
-    test("normal behaviour for update",()=>{
+describe("testing update meddleware functionalBehaviour", () => {
+    test("normal behaviour for update", () => {
         jest.resetModules();
-        jest.doMock("../model/customer",()=>({
-            findOne: jest.fn(async(filter)=>{
+        jest.doMock("../model/customer", () => ({
+            findOne: jest.fn(async (filter) => {
                 expect(filter._id).toBe("hello");
-                let out =  {
-                    save: jest.fn(async()=>{return out}),
+                let out = {
+                    save: jest.fn(async () => { return out }),
                 };
-                out._doc = out; 
+                out._doc = out;
                 return out
             })
         }))
         const reqMock = {
-            body:{ 
-                name:"ahmed",
+            body: {
+                name: "ahmed",
             },
-            params:{
-                custId: "hello", 
+            params: {
+                custId: "hello",
             },
         };
         const resMock = {
-            status:jest.fn((s)=>{
+            status: jest.fn((s) => {
                 expect(s).toBe(200);
                 return resMock
             }),
-            json:jest.fn((obj)=>{
+            json: jest.fn((obj) => {
                 expect(obj.ok).toBe(true);
                 expect(obj.doc.name).toBe("ahmed");
             })
         };
         require("./customer").updateCustomer(reqMock, resMock);
     });
-    
-    it("should respond with Error",()=>{
-        jest.resetModules(); 
-        const mmocks ={
-            findOne:jest.fn(async(x)=>{
+
+    it("should respond with Error", () => {
+        jest.resetModules();
+        const mmocks = {
+            findOne: jest.fn(async (x) => {
                 throw new Error("Some Error");
             }),
 
         };
-        jest.doMock("../model/customer",()=>mmocks);
+        jest.doMock("../model/customer", () => mmocks);
         const reqMock = {
-            body:{ 
-                name:"ahmed",
+            body: {
+                name: "ahmed",
             },
-            params:{
-                custId: "hello", 
+            params: {
+                custId: "hello",
             },
         };
         const resMock = {
-            status:jest.fn((s)=>{
+            status: jest.fn((s) => {
                 expect(s).toBe(500);
                 return resMock
             }),
-            json:jest.fn((obj)=>{
+            json: jest.fn((obj) => {
                 expect(obj.ok).toBe(false);
                 expect(obj.message).toBe("Some Error");
             })
