@@ -1,11 +1,11 @@
 
-describe("testing Contrller middleware", () => {
+describe("testing addCustomer middleware", () => {
     beforeEach(() => {
         jest.resetModules();
     });
 
     test("addCustomer function Normal behaviours", () => {
-
+        
         createMock = jest.fn(async () => ({ _id: "helloMock" }));
         custModelMock = jest.doMock("../model/customer", () => ({
             create: createMock,
@@ -51,5 +51,40 @@ describe("testing Contrller middleware", () => {
         const { addCustomer } = require("./customer");
         addCustomer(reqMock, resMock);
 
+    })
+})
+
+describe("testing update meddleware functionalBehaviour",()=>{
+    test("normal behaviour for update",()=>{
+        jest.resetModules();
+        jest.doMock("../model/customer",()=>({
+            findOne: jest.fn(async(filter)=>{
+                expect(filter._id).toBe("hello");
+                let out =  {
+                    save: jest.fn(async()=>{return out}),
+                };
+                out._doc = out; 
+                return out
+            })
+        }))
+        const reqMock = {
+            body:{ 
+                name:"ahmed",
+            },
+            params:{
+                custId: "hello", 
+            },
+        };
+        const resMock = {
+            status:jest.fn((s)=>{
+                expect(s).toBe(200);
+                return resMock
+            }),
+            json:jest.fn((obj)=>{
+                expect(obj.ok).toBe(true);
+                expect(obj.doc.name).toBe("ahmed");
+            })
+        };
+        require("./customer").updateCustomer(reqMock, resMock);
     })
 })

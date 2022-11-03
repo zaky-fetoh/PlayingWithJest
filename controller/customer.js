@@ -22,14 +22,14 @@ exports.updateCustomer = async(req, res, next)=>{
     let emsg = undefined;
     const body = req.body; 
     const custId = req.params.custId; 
-    const imDoc = await custModel.findOne({
+    let imDoc = await custModel.findOne({
         _id: custId,},{__v:0});
     body._id = undefined; 
-    Object.assign(imDoc, body); 
+    imDoc = Object.assign(imDoc, body); 
     try{ await imDoc.save();}
     catch(e){emsg = e.message;}
     res.status(emsg? 500: 200).json({
-        ok: Boolean(emsg), 
+        ok: !Boolean(emsg), 
         message: emsg? emsg:"document updated", 
         doc: emsg? undefined: imDoc._doc,
     });
