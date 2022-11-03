@@ -86,5 +86,36 @@ describe("testing update meddleware functionalBehaviour",()=>{
             })
         };
         require("./customer").updateCustomer(reqMock, resMock);
+    });
+    
+    it("should respond with Error",()=>{
+        jest.resetModules(); 
+        const mmocks ={
+            findOne:jest.fn(async(x)=>{
+                throw new Error("Some Error");
+            }),
+
+        };
+        jest.doMock("../model/customer",()=>mmocks);
+        const reqMock = {
+            body:{ 
+                name:"ahmed",
+            },
+            params:{
+                custId: "hello", 
+            },
+        };
+        const resMock = {
+            status:jest.fn((s)=>{
+                expect(s).toBe(500);
+                return resMock
+            }),
+            json:jest.fn((obj)=>{
+                expect(obj.ok).toBe(false);
+                expect(obj.message).toBe("Some Error");
+            })
+        };
+        require("./customer").updateCustomer(reqMock, resMock);
+        expect(mmocks.findOne).toHaveBeenCalled();
     })
 })
