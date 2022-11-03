@@ -4,7 +4,7 @@ const custModel = require("../model/customer");
 exports.addCustomer = async (req, res, next) => {
     const body = req.body;
     let emsg = undefined ;
-    let  doc = undefined;
+    let doc = undefined;
     try {
         doc = await custModel.create(body)
     } catch (e) {
