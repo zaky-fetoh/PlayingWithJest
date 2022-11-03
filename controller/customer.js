@@ -17,7 +17,7 @@ exports.addCustomer = async (req, res, next) => {
     });
 };
 
-// PUT /customer
+// PUT /customer/custId
 exports.updateCustomer = async(req, res, next)=>{
     let emsg = undefined;
     const body = req.body; 
@@ -34,3 +34,14 @@ exports.updateCustomer = async(req, res, next)=>{
         doc: emsg? undefined: imDoc._doc,
     });
 }
+
+// DELETE /customer/custId
+exports.deleteCustomer = async(req, res, next)=>{
+    const custId = req.params.custId; 
+    const dltcount = (await custModel.delete({
+        _id: custId,})).deletedCount;
+    res.status(200).json({
+        deletedDocCount:dltcount,
+        ok: true, 
+    });
+};
