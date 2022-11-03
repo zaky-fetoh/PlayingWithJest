@@ -11,9 +11,9 @@ exports.addCustomer = async (req, res, next) => {
         emsg = e.message;
     }
     res.status(emsg? 500: 200).json({
-        ok: Boolean(emsg), 
+        ok: !Boolean(emsg), 
         message: emsg? emsg: "customer added", 
-        customer_id: emsg? undefined: doc._id
+        customer_id: emsg? undefined: doc._id,
     });
 };
 
