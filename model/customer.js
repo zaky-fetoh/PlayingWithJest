@@ -15,7 +15,6 @@ const CustomerSchema = new mongoose.Schema({
 });
 
 CustomerSchema.pre("save",function(next){
-    console.log( this._doc.name);
     next();
 })
 

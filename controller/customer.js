@@ -27,7 +27,7 @@ exports.updateCustomer = async (req, res, next) => {
         imDoc = await custModel.findOne({
             _id: custId,
         }, { __v: 0 });
-        body._id = undefined;
+        body._id = imDoc._id;
         imDoc = Object.assign(imDoc, body);
         await imDoc.save();
     } catch (e) { emsg = e.message; }
@@ -41,7 +41,7 @@ exports.updateCustomer = async (req, res, next) => {
 // DELETE /customer/custId
 exports.deleteCustomer = async (req, res, next) => {
     const custId = req.params.custId;
-    const dltcount = (await custModel.delete({
+    const dltcount = (await custModel.deleteMany({
         _id: custId,
     })).deletedCount;
     res.status(200).json({
