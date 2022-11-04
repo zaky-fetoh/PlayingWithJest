@@ -1,6 +1,6 @@
 const custModel = require("../model/customer");
 
-// GET /customer
+// POST /customer
 exports.addCustomer = async (req, res, next) => {
     const body = req.body;
     let emsg = undefined;
@@ -25,11 +25,12 @@ exports.updateCustomer = async (req, res, next) => {
     let imDoc = undefined;
     try {
         imDoc = await custModel.findOne({
-            _id: custId,}, { __v: 0 });
+            _id: custId,
+        }, { __v: 0 });
         body._id = undefined;
         imDoc = Object.assign(imDoc, body);
         await imDoc.save();
-    }catch (e) { emsg = e.message; }
+    } catch (e) { emsg = e.message; }
     res.status(emsg ? 500 : 200).json({
         ok: !Boolean(emsg),
         message: emsg ? emsg : "document updated",
@@ -48,3 +49,21 @@ exports.deleteCustomer = async (req, res, next) => {
         ok: true,
     });
 };
+
+// GET /customer/custId
+exports.getCustomer = async (req, res, next) => {
+    const custId = req.params.custId;
+    try {
+        imDoc = await custModel.findOne({
+            _id: custId,
+        }, { __v: 0 });
+        res.status(200).json({
+            data: imDoc._doc,
+            ok: true,
+        })
+    } catch (e) {
+        res.status(500).json({
+            ok: false, message: "please try again",
+        })
+    }
+}
